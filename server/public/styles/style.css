@@ -141,3 +141,14 @@ h1 {
     background-color: cyan;
     border-color: cyan;
 }
+#point, #one, #two, #three, #four, #five, #six, #seven, #eight, #nine {
+    background-color: white;
+    border-color: white;
+}
+.btn:hover {
+    border-style: solid;
+    border-color: inherit;
+}
+.btn:active {
+    border-style: inset;
+}
