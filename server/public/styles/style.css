@@ -117,6 +117,7 @@ h1 {
     border-radius: 25%;
     border-style: outset;
     margin: 1px;
+    padding-top: 1px;
 }
 .small-font {
     font-size:1.4em;
@@ -135,4 +136,8 @@ h1 {
 #memoryStore, #memoryRecall, #memoryClear, #power, #root, #parenOpen, #parenClose {
     background-color: lightgray;
     border-color: lightgray;
+}
+#multiply, #divide, #minus, #plus {
+    background-color: cyan;
+    border-color: cyan;
 }
