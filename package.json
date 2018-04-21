@@ -1,0 +1,29 @@
+{
+  "name": "weekend2_calculator",
+  "version": "1.0.0",
+  "description": "Javascript calculator",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micheledexter/Weekend2_Calculator.git"
+  },
+  "keywords": [
+    "calculator"
+  ],
+  "author": "Shely Dexter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/micheledexter/Weekend2_Calculator/issues"
+  },
+  "homepage": "https://github.com/micheledexter/Weekend2_Calculator#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "node": "^9.11.0"
+  }
+}

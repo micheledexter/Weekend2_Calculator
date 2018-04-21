@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!-- index.html
+This is the only page that will be loaded. Everything else will be managed by
+dynamic Javascript, jQuery and AJAX callbacks.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="./styles/style.css">
+    <script src="./vendors/jquery.min.js"></script>
+    <script src="./scripts/client.js"></script>
+    <title>Calculator</title>
+</head>
+
+<body>
+    <header>
+        <h1>Calculator</h1>
+    </header>
+    <main>
+        <div id="calculatorBorder">
+            <span id="label">CacheIO</span>
+            <div id="calculatorFace">
+                <div id="calculatorDisplay">
+                    <div id="screenBorder">
+                        <input id="calculatorScreen" placeholder="0" disabled="disabled">
+                        <table id="underFace">
+                            <tbody>
+                                <tr>
+                                    <td id="solar">
+                                        <table id="fakeSolar">
+                                            <tr id="panels">
+                                                <td class="panel">&nbsp;</td>
+                                                <td class="panel">&nbsp;</td>
+                                                <td class="panel">&nbsp;</td>
+                                                <td class="panel">&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td id="newInput">
+                                        <input id="operation" disabled="disabled"><input id="input" disabled="disabled">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="calculatorButtons">
+                    <table id="buttonTable">
+                        <tbody>
+                            <tr>
+                                <td class="calcButton"><button id="clear" class="btn small-font"><sup>AC</sup>/<sub>C</sub></button></td>
+                                <td class="calcButton"><button id="memoryStore" class="btn small-font">M</button></td>
+                                <td class="calcButton"><button id="memoryRecall" class="btn small-font">MR</button></td>
+                                <td class="calcButton"><button id="memoryClear" class="btn small-font">MC</button></td>
+                                <td class="calcButton"><button id="root" class="btn small-font"><sup>Y</sup>√X</button></td>
+                            </tr>
+                            <tr>
+                                    <td class="calcButton"><button id="multiply" class="btn">×</button></td>
+                                <td class="calcButton"><button id="seven" class="btn">7</button></td>
+                                <td class="calcButton"><button id="eight" class="btn">8</button></td>
+                                <td class="calcButton"><button id="nine" class="btn">9</button></td>
+                                <td class="calcButton"><button id="power" class="btn small-font">X<sup>Y</sup></button></td>
+                            </tr>
+                            <tr>
+                                    <td class="calcButton"><button id="plus"class="btn">÷</button></td>
+                                <td class="calcButton"><button id="four" class="btn">4</button></td>
+                                <td class="calcButton"><button id="five" class="btn">5</button></td>
+                                <td class="calcButton"><button id="six" class="btn">6</button></td>
+                                <td class="calcButton"><button id="parenOpen" class="btn">)</button></td>
+                            </tr>
+                            <tr>
+                                    <td class="calcButton"><button id="minus" class="btn">-</button></td>
+                                <td class="calcButton"><button id="one" class="btn">1</button></td>
+                                <td class="calcButton"><button id="two" class="btn">2</button></td>
+                                <td class="calcButton"><button id="three" class="btn">3</button></td>
+                                <td class="calcButton"><button id="parenClose" class="btn">(</button></td>
+                            </tr>
+                            <tr>
+                                    <td class="calcButton"><button id="plus" class="btn">+</button></td>
+                                <td class="calcButton"><button id="zero" class="btn">0</button></td>
+                                <td class="calcButton"><button id="point" class="btn">.</button></td>
+                                <td class="calcButton" colspan="2"><button id="equals" class="btn">=</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
