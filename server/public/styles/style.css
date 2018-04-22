@@ -165,3 +165,7 @@ h1 {
 #operation, #smallScreen {
     padding: 2px;
 }
+#history {
+    border-collapse: collapse;
+    border: 3px dotted teal;
+}

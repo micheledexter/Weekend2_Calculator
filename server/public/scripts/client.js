@@ -122,6 +122,20 @@ function onReady() {
 
         buttonProps(button); // *** Debug ***
     });
+    $('#reset').on('click', function () {
+        $.ajax({
+            method: 'POST',
+            url: '/reset',
+            data: 'reset'
+        }).then(function (response) {
+            console.log(response);
+            memoryFlash('•');
+        });
+        getHistory();
+        bigScreen.val('0');
+        smallScreen.val('0');
+        operation.val('');
+    });
 }
 
 // ==========BUTTON FUNCTIONS==========
@@ -169,6 +183,11 @@ function point() {
 // Paren buttons (FUNCTIONAL)
 function paren(button) {
     debug('Parentheses'); // *** Debug ***
+    if (operation.val() == 'X=') {
+        smallScreen.val(bigScreen.val());
+        operation.val('');
+        bigScreen.val('0');
+    }
     if (bigScreen.val() === '0') {
         bigScreen.val(value);
     } else {
@@ -269,32 +288,81 @@ function equals() {
         operator = '-';
         operatorName = 'subtract'
     }
-    expression = xValue + operator + yValue;
-    try {
-        answer = eval(expression);
-        operation.val('X=');
-        smallScreen.val(expression);
-        bigScreen.val(answer);
-        let historyObject = {
-            x: xValue,
-            y: yValue,
-            type: operatorName
-        }
-        $.ajax({
-            type: 'POST',
-            url: '/history-add',
-            data: historyObject
-        }).then(function (response) {
-            console.log(response);
-        });
-    } catch (err) {
-        errorFlash();
+    expression = {
+        x: xValue,
+        y: yValue,
+        type: operator
     }
-
+    setExpressionModule(expression);
+    debug(expression);
+    
     getHistory();
 }
 
 // ----------Support Functions----------
+
+// Set 'expression' module value
+function setExpressionModule(expression) {
+    debug(expression); // *** Debug ***
+    $.ajax({
+        method: 'POST',
+        url: '/set-expression',
+        data: expression
+    }).then(function (response) {
+        console.log(response);
+    });
+}
+
+// Set 'answer' module value
+function setAnswerModule(answer) {
+    debug(expression); // *** Debug ***
+    $.ajax({
+        method: 'POST',
+        url: '/set-answer',
+        data: answer
+    }).then(function (response) {
+        console.log(response);
+    });
+}
+
+// Set 'formula' module value
+function setFormulaModule(formula) {
+    debug(formula); // *** Debug ***
+    $.ajax({
+        method: 'POST',
+        url: '/set-formula',
+        data: formula
+    }).then(function (response) {
+        console.log(response);
+    });
+}
+
+// Get 'expression' module value
+function getExpressionModule() {
+    let expression;
+    $.ajax({
+        method: 'GET',
+        url: '/get-expression'
+    }).then(function (response) {
+        debug(response);
+        expression = response;
+    });
+    return expression;
+}
+
+// Get 'answer' module value
+function getAnswerModule() {
+    let answer;
+    $.ajax({
+        method: 'GET',
+        url: '/get-answer'
+    }).then(function (response) {
+        debug(response);
+        answer = response;
+    });
+    return answer;
+}
+
 // Memory operation flash
 function memoryFlash(show) {
     let temp = operation.val();
@@ -323,7 +391,28 @@ function getHistory() {
             let type = item.type;
             history.append(`<tr><td>${xValue}</td><td>${yValue}</td><td>${type}</td></tr>`);
         }
-    })
+    });
+}
+
+// Add a calculation to the history
+function addToHistory(item) {
+    $.ajax({
+        method: 'POST',
+        url: '/history-add',
+        data: item
+    }).then(function (response) {
+        console.log(response);
+    });
+}
+
+// Get the current expression
+function getCurrent() {
+    $.ajax({
+        method: 'GET',
+        url: '/get-current',
+    }).then(function (response) {
+        // PLACEHOLDER
+    });
 }
 
 // ==========Miscellaneous debugging tools==========

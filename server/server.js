@@ -24,12 +24,33 @@ app.use(express.static('server/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Module assignments
-memory = require('./modules/memory');
-history = require('./modules/history');
+let memory = require('./modules/memory');
+let history = require('./modules/history');
+let expression = require('./modules/expression');
+let answer = require('./modules/answer');
+let formula = require('./modules/formula');
 
 // =========='GET', 'POST', 'PUT', and 'DELETE'==========
 
 // -----'GET' requests-----
+// Get 'expression' module
+app.get('/get-expression', (req, res) => {
+    debug(loaded('/get-expression'));
+    res.send(expression);
+});
+
+// Get 'answer' module
+app.get('/get-answer', (req, res) => {
+    debug(loaded('/get-answer'));
+    res.send(answer);
+});
+
+// Get 'formula' module
+app.get('/get-formula', (req, res) => {
+    debug(loaded('/get-formula'));
+    res.send(formula);
+});
+
 // Memory recall
 app.get('/memory-recall', (req, res) => {
     debug(loaded('/memory-recall')); // *** Debug ***
@@ -43,7 +64,35 @@ app.get('/history-list', (req, res) => {
     res.send(history);
 });
 
+// Return the answer to the current expression to the client
+app.get('/get-answer', (req, res) => {
+    debug(loaded('/get-answer')); // *** Debug ***
+    debug(answer);
+    res.send(answer);
+});
+
 // -----'POST' requests-----
+// Set 'expression' module
+app.post('/set-expression', (req, res) => {
+    debug(loaded('/set-expression'));
+    expression = req.body;
+    res.sendStatus(200);
+});
+
+// Set 'answer' module
+app.post('/set-answer', (req, res) => {
+    debug(loaded('/set-answer'));
+    answer = req.body;
+    res.sendStatus(200);
+});
+
+// Set 'formula' module
+app.post('/set-formula', (req, res) => {
+    debug(loaded('/set-formula'));
+    formula = req.body;
+    res.sendStatus(200);
+});
+
 // Memory store
 app.post('/memory-store', (req, res) => {
     debug(loaded('/memory-store')); // *** Debug ***
@@ -61,9 +110,18 @@ app.post('/memory-clear', (req, res) => {
 });
 
 // Append answer to history
-app.post('/history-add', (req,res) => {
+app.post('/history-add', (req, res) => {
     debug(loaded('/history-add')); // *** Debug ***
     history.push(req.body);
+    res.sendStatus(200);
+});
+
+// Reset button
+app.post('/reset', (req, res) => {
+    debug(loaded('/reset')); // *** Debug ***
+    memory = '0';
+    history = [];
+    debug(memory); // *** Debug ***
     res.sendStatus(200);
 });
 
