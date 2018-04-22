@@ -5,6 +5,10 @@ This will be the main stylesheet. Any additional stylesheets after this one
 * {
     margin: 0;
 }
+@font-face {
+    font-family: "Cursed Timer";
+    src: url(CursedTimerULiL.ttf) format("truetype");
+}
 body {
     background-color: lightcyan;
 }
@@ -50,9 +54,10 @@ h1 {
     font-size: 0.7em;
     margin-left: 10%;
 }
-#calculatorScreen {
+#bigScreen {
     text-align: right;
-    background-color: lightblue;
+    background-color: #7d8c76;
+    color: black;
     font-size: 3em;
     width: 90%;
     display: inline-block;
@@ -73,15 +78,17 @@ h1 {
     display: inline-block;
     width: 10%;
     margin: 0px;
-    background-color: lightblue;
+    background-color: #7d8c76;
+    color: black;
     border-right: none;
     text-align: center;
 }
-#input {
+#smallScreen {
     width: 80%;
     margin: 0px;
     display: inline-block;
-    background-color: lightblue;
+    background-color: #7d8c76;
+    color: black;
     text-align: right;
     border-left: none;
 }
@@ -151,4 +158,10 @@ h1 {
 }
 .btn:active {
     border-style: inset;
+}
+#bigScreen, #operation, #smallScreen {
+    font-family: "Cursed Timer";
+}
+#operation, #smallScreen {
+    padding: 2px;
 }

@@ -3,140 +3,214 @@ This is the main client-side javascript file. Console logs made from within
 this file will be outputted to the in-browser console as opposed to the
 server-side terminal.
 */
+
+// =====DEBUGGING TOGGLE=====
+const DEBUGGING = true;
+
+// Important Values
+let working = '0';
+let current = '0';
+let workingLength = 0;
+let currentLength = 0;
+let name = '';
+let value = '';
+let button;
+let bigScreen;
+let smallScreen;
+let operation;
+let openParantheses = 0;
+
 console.log('js');
 
 $(document).ready(onReady);
 
+// Create a list of the button names and values
+const buttonList = {
+    clear: 'c',
+    memoryStore: 'm',
+    memoryRecall: 'mr',
+    memoryClear: 'mc',
+    root: '√',
+    power: '^',
+    parenClose: ')',
+    parenOpen: '(',
+    multiply: '×',
+    divide: '÷',
+    minus: '-',
+    plus: '+',
+    equals: '=',
+    point: '.',
+    zero: '0',
+    one: '1',
+    two: '2',
+    three: '3',
+    four: '4',
+    five: '5',
+    six: '6',
+    seven: '7',
+    eight: '8',
+    nine: '9'
+}
+
+// 
+const buttonKeys = [];
+for (let key of Object.keys(buttonList)) {
+    buttonKeys.push(key);
+}
+
+debug(buttonList); // Debug
+debug(buttonKeys); // Debug
+
 function onReady() {
     console.log('JQ');
-    $('#clear').on('click', clear);
-    $('#memoryStore').on('click', memoryStore);
-    $('#memoryRecall').on('click', memoryRecall);
-    $('#memoryClear').on('click', memoryClear);
-    $('#root').on('click', root);
-    $('#power').on('click', power);
-    $('#parenClose').on('click', parenClose);
-    $('#parenOpen').on('click', parenOpen);
-    $('#multiply').on('click', multiply);
-    $('#divide').on('click', divide);
-    $('#minus').on('click', minus);
-    $('#plus').on('click', plus);
-    $('#equals').on('click', equals);
-    $('#point').on('click', point);
-    $('#zero').on('click', zero);
-    $('#one').on('click', one);
-    $('#two').on('click', two);
-    $('#three').on('click', three);
-    $('#four').on('click', four);
-    $('#five').on('click', five);
-    $('#six').on('click', six);
-    $('#seven').on('click', seven);
-    $('#eight').on('click', eight);
-    $('#nine').on('click', nine);
+
+    // ----------First-load value loads----------
+    for (let key of buttonKeys) {
+        $(`#${key}`).data('name', key);
+        $(`#${key}`).data('value', buttonList[key]);
+    }
+    bigScreen = $('#bigScreen');
+    bigScreen.val('0');
+    smallScreen = $('#smallScreen');
+    smallScreen.val('0');
+    operation = $('#operation');
+
+    // ==========Button event handlers==========
+    $('.btn').on('click', function () {
+
+        // Apply variable shortcuts for often-used jquery objects    
+        button = $(this);
+        name = button.data('name');
+        value = button.data('value');
+
+        // Set 'Clear' button functionality
+        if (value == 'c') clear(button);
+
+        // Set [0-9] button functionality
+        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(value)) number(button);
+
+        // Set '.' button functionality
+        if (value == '.') point();
+
+        // Set '(' and ')' button functionality
+        if (value == '(' || value == ')') paren(button);
+
+        // Set "Memory-store" button functionality
+        if (value == 'm') memoryStore();
+
+        // Set "Memory-recall" button functionality
+        if (value == 'mr') memoryRecall();
+
+        // Set "Memory-clear" button functionality
+        if (value == 'mc') memoryClear();
+
+        // Set "y-root" button functionality
+        if (value == '√') rootY();
+
+        // Set "y-power" button functionality
+        if (value == '^') powerY();
+
+        // Set [operation] button functionality
+        if (['×', '÷','-','+'].includes(value)) doOperation(button);
+
+        // Set 'Equals' button functionality
+        if (value == '=') equals();
+
+        buttonProps(button); // *** Debug ***
+    });
 }
 
-function clear() {
-    logPressed('clear');
+// ==========BUTTON FUNCTIONS==========
+
+// Clear button
+function clear(button) {
+    debug('Clear');
+    if (bigScreen.val() !== '0') {
+        bigScreen.val('0');
+        existingPoint = false;
+        debug('Big screen cleared.'); // *** Debug ***
+    } else if (bigScreen.val() == 0) {
+        smallScreen.val('0');
+        operation.val('');
+        existingPoint = false;
+        debug('Small screen cleared.'); // *** Debug ***
+    }
 }
 
-function memoryStore() {
-    logPressed('memoryStore');
+// Number buttons
+function number(button) {
+    debug('Number');
+    if (bigScreen.val() === '0') {
+        bigScreen.val(value);
+    }
+    else {
+        bigScreen.val(bigScreen.val() + value);
+    }
 }
 
-function memoryRecall() {
-    logPressed('memoryRecall');
-}
-
-function memoryClear() {
-    logPressed('memoryClear');
-}
-
-function root() {
-    logPressed('root');
-}
-
-function power() {
-    logPressed('power');
-}
-
-function parenClose() {
-    logPressed('parenClose');
-}
-
-function parenOpen() {
-    logPressed('parenOpen');
-}
-
-function multiply() {
-    logPressed('multiply');
-}
-
-function divide() {
-    logPressed('divide');
-}
-
-function minus() {
-    logPressed('minus');
-}
-
-function plus() {
-    logPressed('plus');
-}
-
-function equals() {
-    logPressed('equals');
-}
-
+// Point button
 function point() {
-    logPressed('point');
+    debug('Point');
+    if (bigScreen.val() === '0') {
+        $(bigScreen).val('0' + value);
+    } else {
+        $(bigScreen).val(bigScreen.val() + value);
+    }
 }
 
-function zero() {
-    logPressed('zero');
+// Paren buttons
+function paren(button) {
+    debug('Parentheses'); // *** Debug ***
 }
 
-function one() {
-    logPressed('one');
+// Memory-store button
+function memoryStore() {
+    debug('Memory: store'); // *** Debug ***
 }
 
-function two() {
-    logPressed('two');
+// Memory-recall button
+function memoryRecall() {
+    debug('Memory: recall'); // *** Debug ***
 }
 
-function three() {
-    logPressed('three');
+// Memory-clear button
+function memoryClear() {
+    debug('Memory: clear'); // *** Debug ***
 }
 
-function four() {
-    logPressed('four');
+// Root button
+function rootY() {
+    debug('Root'); // *** Debug ***
 }
 
-function five() {
-    logPressed('five');
+// Power button
+function powerY() {
+    debug('Power'); // *** Debug ***
 }
 
-function six() {
-    logPressed('six');
+// Operation buttons
+function doOperation(button) {
+    debug('Operation'); // *** Debug ***
 }
 
-function seven() {
-    logPressed('seven');
+// Equals button
+function equals() {
+    debug('Equals');
 }
 
-function eight() {
-    logPressed('eight');
+// ----------Miscellaneous debugging tools.----------
+
+function buttonProps(button) {
+    if (DEBUGGING) {
+        button = $(this);
+        buttonName = button.data('name');
+        buttonValue = button.data('value');
+        console.log(`Name: ${name}; Value: ${value}; Big screen: ${bigScreen.val()}; Small screen: ${smallScreen.val()}`); // Debug
+    }
 }
 
-function nine() {
-    logPressed('nine');
-}
-
-function pressed(button) {
-    let message = 'Button pressed';
-    if (button) message += `: ${button}`;
-    return message;
-}
-
-function logPressed(button) {
-    console.log(pressed(button));
+function debug(item) {
+    if (DEBUGGING) {
+        console.log(item);
+    }
 }

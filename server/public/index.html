@@ -25,7 +25,7 @@ dynamic Javascript, jQuery and AJAX callbacks.
             <div id="calculatorFace">
                 <div id="calculatorDisplay">
                     <div id="screenBorder">
-                        <input id="calculatorScreen" placeholder="0" disabled="disabled">
+                        <input id="bigScreen" maxlength="9" placeholder="0" disabled="disabled">
                         <table id="underFace">
                             <tbody>
                                 <tr>
@@ -40,7 +40,7 @@ dynamic Javascript, jQuery and AJAX callbacks.
                                         </table>
                                     </td>
                                     <td id="newInput">
-                                        <input id="operation" disabled="disabled"><input id="input" disabled="disabled">
+                                        <input id="operation" disabled="disabled"><input id="smallScreen" maxlength:"12" disabled="disabled">
                                     </td>
                                 </tr>
                             </tbody>
@@ -136,6 +136,9 @@ dynamic Javascript, jQuery and AJAX callbacks.
                     </table>
                 </div>
             </div>
+        </div>
+        <div id="history">
+
         </div>
     </main>
 </body>
