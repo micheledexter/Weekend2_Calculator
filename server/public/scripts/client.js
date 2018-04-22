@@ -4,10 +4,12 @@ this file will be outputted to the in-browser console as opposed to the
 server-side terminal.
 */
 
-// =====DEBUGGING TOGGLE=====
+console.log('js'); // Javascript is running
+
+// ==========DEBUGGING TOGGLE==========
 const DEBUGGING = true;
 
-// Important Values
+// ==========Global Variables==========
 let working = '0';
 let current = '0';
 let workingLength = 0;
@@ -19,12 +21,6 @@ let bigScreen;
 let smallScreen;
 let operation;
 let openParantheses = 0;
-
-console.log('js');
-
-$(document).ready(onReady);
-
-// Create a list of the button names and values
 const buttonList = {
     clear: 'c',
     memoryStore: 'm',
@@ -51,20 +47,21 @@ const buttonList = {
     eight: '8',
     nine: '9'
 }
-
-// 
 const buttonKeys = [];
 for (let key of Object.keys(buttonList)) {
     buttonKeys.push(key);
 }
 
-debug(buttonList); // Debug
-debug(buttonKeys); // Debug
+debug(buttonList); // *** Debug ***
+debug(buttonKeys); // *** Debug ***
 
+$(document).ready(onReady);
+
+// ==========jQuery function callback==========
 function onReady() {
-    console.log('JQ');
+    console.log('JQ'); // jQuery is running
 
-    // ----------First-load value loads----------
+    // Document-ready value loads
     for (let key of buttonKeys) {
         $(`#${key}`).data('name', key);
         $(`#${key}`).data('value', buttonList[key]);
@@ -139,7 +136,7 @@ function clear(button) {
 
 // Number buttons
 function number(button) {
-    debug('Number');
+    debug('Number'); // *** Debug ***
     if (bigScreen.val() === '0') {
         bigScreen.val(value);
     }
@@ -150,7 +147,7 @@ function number(button) {
 
 // Point button
 function point() {
-    debug('Point');
+    debug('Point'); // *** Debug ***
     if (bigScreen.val() === '0') {
         $(bigScreen).val('0' + value);
     } else {
@@ -198,7 +195,7 @@ function equals() {
     debug('Equals');
 }
 
-// ----------Miscellaneous debugging tools.----------
+// ==========Miscellaneous debugging tools==========
 
 function buttonProps(button) {
     if (DEBUGGING) {
