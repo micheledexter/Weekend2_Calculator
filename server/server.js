@@ -37,6 +37,12 @@ app.get('/memory-recall', (req, res) => {
     res.send(memory.valueOf());
 });
 
+// Recall all history
+app.get('/history-list', (req, res) => {
+    debug(loaded('/history-list')); // *** Debug ***
+    res.send(history);
+});
+
 // -----'POST' requests-----
 // Memory store
 app.post('/memory-store', (req, res) => {
@@ -49,10 +55,17 @@ app.post('/memory-store', (req, res) => {
 // Memory clear
 app.post('/memory-clear', (req, res) => {
     debug(loaded('/memory-clear')); // *** Debug ***
-    memory = '0';
+    if (req.body == 'delete') memory = '0';
     debug(memory); // *** Debug ***
     res.sendStatus(200);
-})
+});
+
+// Append answer to history
+app.post('/history-add', (req,res) => {
+    debug(loaded('/history-add')); // *** Debug ***
+    history.push(req.body);
+    res.sendStatus(200);
+});
 
 // ==========The app listener goes at the bottom... I think==========
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

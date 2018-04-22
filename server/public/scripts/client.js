@@ -21,7 +21,7 @@ let button;
 let bigScreen;
 let smallScreen;
 let operation;
-let openParantheses = 0;
+let openFunction = 0;
 const buttonList = {
     clear: 'c',
     memoryStore: 'm',
@@ -77,6 +77,8 @@ function onReady() {
         operation.val('');
     }
 
+    getHistory();
+
     // ==========Button event handlers==========
     $('.btn').on('click', function () {
 
@@ -124,33 +126,37 @@ function onReady() {
 
 // ==========BUTTON FUNCTIONS==========
 
-// Clear button
+// Clear button (FUNCTIONAL)
 function clear(button) {
     debug('Clear');
     if (bigScreen.val() !== '0') {
         bigScreen.val('0');
-        existingPoint = false;
+        smallScreen.val(eval(smallScreen.val()));
+        openFunction = 0;
         debug('Big screen cleared.'); // *** Debug ***
     } else if (bigScreen.val() == 0) {
         smallScreen.val('0');
         operation.val('');
-        existingPoint = false;
         debug('Small screen cleared.'); // *** Debug ***
     }
 }
 
-// Number buttons
+// Number buttons (FUNCTIONAL)
 function number(button) {
+    if (operation.val() == 'X=') {
+        smallScreen.val(bigScreen.val());
+        operation.val('');
+        bigScreen.val('0');
+    }
     debug('Number'); // *** Debug ***
     if (bigScreen.val() === '0') {
         bigScreen.val(value);
-    }
-    else {
+    } else {
         bigScreen.val(bigScreen.val() + value);
     }
 }
 
-// Point button
+// Point button (FUNCTIONAL)
 function point() {
     debug('Point'); // *** Debug ***
     if (bigScreen.val() === '0') {
@@ -160,12 +166,19 @@ function point() {
     }
 }
 
-// Paren buttons
+// Paren buttons (FUNCTIONAL)
 function paren(button) {
     debug('Parentheses'); // *** Debug ***
+    if (bigScreen.val() === '0') {
+        bigScreen.val(value);
+    } else {
+        bigScreen.val(bigScreen.val() + value);
+    }
+    if (value == '(') openFunction++;
+    if (value == ')') openFunction--;
 }
 
-// Memory-store button
+// Memory-store button (FUNCTIONAL)
 function memoryStore() {
     debug('Memory: store'); // *** Debug ***
     $.ajax({
@@ -178,7 +191,7 @@ function memoryStore() {
     });
 }
 
-// Memory-recall button
+// Memory-recall button (FUNCTIONAL)
 function memoryRecall() {
     debug('Memory: recall'); // *** Debug ***
     $.ajax({
@@ -190,7 +203,7 @@ function memoryRecall() {
     });
 }
 
-// Memory-clear button
+// Memory-clear button (FUNCTIONAL)
 function memoryClear() {
     debug('Memory: clear'); // *** Debug ***
     $.ajax({
@@ -216,11 +229,69 @@ function powerY() {
 // Operation buttons
 function doOperation(button) {
     debug('Operation'); // *** Debug ***
+    if (openFunction == 0) {
+        try {
+            if (openFunction == 0) {
+                smallScreen.val(bigScreen.val());
+                bigScreen.val('0');
+                operation.val(value);
+            }
+        } catch (err) {
+            errorFlash();
+        }
+    } else {
+        if (value == '×') value = '*';
+        if (value == '÷') value = '/';
+        bigScreen.val(bigScreen.val() + value);
+    }
 }
 
 // Equals button
 function equals() {
     debug('Equals');
+    let expresssion;
+    let operator = operation.val();
+    let answer;
+    let xValue = smallScreen.val();
+    let yValue = bigScreen.val();
+    let operatorName;
+    debug(operator);
+    if (operator == '×') {
+        operator = '*';
+        operatorName = 'multiply';
+    } else if (operator == '÷') {
+        operator = '/';
+        operatorName = 'divide';
+    } else if (operator == '+') {
+        operator = '+';
+        operatorName = 'add';
+    } else if (operator == '-') {
+        operator = '-';
+        operatorName = 'subtract'
+    }
+    expression = xValue + operator + yValue;
+    try {
+        answer = eval(expression);
+        operation.val('X=');
+        smallScreen.val(expression);
+        bigScreen.val(answer);
+        let historyObject = {
+            x: xValue,
+            y: yValue,
+            type: operatorName
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/history-add',
+            data: historyObject
+        }).then(function (response) {
+            console.log(response);
+        });
+    } catch (err) {
+        errorFlash();
+    }
+
+    getHistory();
 }
 
 // ----------Support Functions----------
@@ -228,17 +299,32 @@ function equals() {
 function memoryFlash(show) {
     let temp = operation.val();
     operation.val(show);
-    setTimeout(function () { operation.val(temp); }, 1000);
+    setTimeout(function () { operation.val(temp); }, 200);
 }
 
-// ==========SERVER FUNCTIONS==========
-// ----------'GET'----------
+// Flash 'ERROR' message
+function errorFlash() {
+    let temp = bigScreen.val();
+    bigScreen.val('ERROR');
+    setTimeout(function () { bigScreen.val(temp); }, 200);
+}
 
-// ----------'POST'----------
-
-// ----------'PUT'----------
-
-// ----------'DELETE'----------
+// Retrieve history
+function getHistory() {
+    let history = $('#historyEntries');
+    history.html('');
+    $.ajax({
+        method: 'GET',
+        url: '/history-list'
+    }).then(function (response) {
+        for (let item of response) {
+            let xValue = item.x;
+            let yValue = item.y;
+            let type = item.type;
+            history.append(`<tr><td>${xValue}</td><td>${yValue}</td><td>${type}</td></tr>`);
+        }
+    })
+}
 
 // ==========Miscellaneous debugging tools==========
 
