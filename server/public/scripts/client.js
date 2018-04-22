@@ -6,8 +6,9 @@ server-side terminal.
 
 console.log('js'); // Javascript is running
 
-// ==========DEBUGGING TOGGLE==========
+// ==========TOGGLES==========
 const DEBUGGING = true;
+const BLANK_SCREEN = true;
 
 // ==========Global Variables==========
 let working = '0';
@@ -67,10 +68,14 @@ function onReady() {
         $(`#${key}`).data('value', buttonList[key]);
     }
     bigScreen = $('#bigScreen');
-    bigScreen.val('0');
     smallScreen = $('#smallScreen');
-    smallScreen.val('0');
     operation = $('#operation');
+
+    if (BLANK_SCREEN) {
+        bigScreen.val('0');
+        smallScreen.val('0');
+        operation.val('');
+    }
 
     // ==========Button event handlers==========
     $('.btn').on('click', function () {
@@ -93,7 +98,7 @@ function onReady() {
         if (value == '(' || value == ')') paren(button);
 
         // Set "Memory-store" button functionality
-        if (value == 'm') memoryStore();
+        if (value == 'm') { memoryStore() };
 
         // Set "Memory-recall" button functionality
         if (value == 'mr') memoryRecall();
@@ -108,7 +113,7 @@ function onReady() {
         if (value == '^') powerY();
 
         // Set [operation] button functionality
-        if (['×', '÷','-','+'].includes(value)) doOperation(button);
+        if (['×', '÷', '-', '+'].includes(value)) doOperation(button);
 
         // Set 'Equals' button functionality
         if (value == '=') equals();
@@ -163,16 +168,39 @@ function paren(button) {
 // Memory-store button
 function memoryStore() {
     debug('Memory: store'); // *** Debug ***
+    $.ajax({
+        method: 'POST',
+        url: '/memory-store',
+        data: bigScreen.val()
+    }).then(function (response) {
+        console.log(response);
+        memoryFlash('M');
+    });
 }
 
 // Memory-recall button
 function memoryRecall() {
     debug('Memory: recall'); // *** Debug ***
+    $.ajax({
+        method: 'GET',
+        url: '/memory-recall'
+    }).then(function (response) {
+        bigScreen.val(response);
+        memoryFlash('MR');
+    });
 }
 
 // Memory-clear button
 function memoryClear() {
     debug('Memory: clear'); // *** Debug ***
+    $.ajax({
+        method: 'POST',
+        url: '/memory-clear',
+        data: 'delete'
+    }).then(function (response) {
+        console.log(response);
+        memoryFlash('MC');
+    });
 }
 
 // Root button
@@ -194,6 +222,23 @@ function doOperation(button) {
 function equals() {
     debug('Equals');
 }
+
+// ----------Support Functions----------
+// Memory operation flash
+function memoryFlash(show) {
+    let temp = operation.val();
+    operation.val(show);
+    setTimeout(function () { operation.val(temp); }, 1000);
+}
+
+// ==========SERVER FUNCTIONS==========
+// ----------'GET'----------
+
+// ----------'POST'----------
+
+// ----------'PUT'----------
+
+// ----------'DELETE'----------
 
 // ==========Miscellaneous debugging tools==========
 
